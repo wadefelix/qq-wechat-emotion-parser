@@ -7,19 +7,19 @@ var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 var mocha = require('gulp-mocha');
 
-gulp.task('objectify-json', function() {
+gulp.task('objectify-json',function() {
     return gulp.src('./src/emotions.json')
         .pipe(wrap('window._qqWechatEmotionParser.emotion_map=<%= JSON.stringify(contents) %>;'))
         .pipe(rename('emotions.js'))
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('clean-tmp', ['js'], function(){
-    return gulp.src('./dist/emotions.js', {read: false})
-		.pipe(clean());
+gulp.task('test',function(){
+    return gulp.src('test/*', {read: false})
+        .pipe(mocha({reporter: 'nyan'}));
 });
 
-gulp.task('js', ['objectify-json', 'test'], function() {
+gulp.task('js', gulp.series('objectify-json', 'test', function() {
     var srcs = ['./src/window.js', './dist/emotions.js', './src/trie.js',
         './src/index.js'
     ];
@@ -35,12 +35,12 @@ gulp.task('js', ['objectify-json', 'test'], function() {
             suffix: '.min'
         }))
         .pipe(gulp.dest('./dist'));
-});
+}));
 
-gulp.task('test', function(){
-    return gulp.src('test/*', {read: false})
-		.pipe(mocha({reporter: 'nyan'}));
-});
+gulp.task('clean-tmp', gulp.series('js', function(){
+    return gulp.src('./dist/emotions.js', {read: false})
+		.pipe(clean());
+}));
 
-gulp.task('dist', ['js', 'clean-tmp']);
-gulp.task('default', ['test']);
+gulp.task('dist', gulp.series('js', 'clean-tmp'));
+gulp.task('default', gulp.series('test'));
