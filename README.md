@@ -88,7 +88,11 @@ I xx Gunzi, ![](https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gi
 
     console.log(html);
     ```
-
+3. 使用容器构建项目
+    ```cmd
+    docker run -it --rm -v //d/Projects/qq-wechat-emotion-parser:/app -w /app --entrypoint=bash node:gallium-buster-slim
+    npm run dist
+    ```
 ## Contribution
 
 ### 贡献代码
