@@ -21,14 +21,14 @@ function build(){
 
 function qqWechatEmotionParser(str) {
     var indices = trie.search(str);
-    var labelEmotion = `<a title="{{title}}" style="display: inline-block;background: url(https://res.wx.qq.com/a/wx_fed/webwx/res/static/img/6AfH8-r.png) no-repeat;width: 28px;
+    var labelEmotion = `<a class="wechat-emotion" title="{{title}}" style="display: inline-block;background: url(https://res.wx.qq.com/a/wx_fed/webwx/res/static/img/6AfH8-r.png) no-repeat;width: 28px;
     height: 28px; background-position:{{position}};"></a>`
     indices.reverse().map(function(idx) {
         var pos = idx[0],
             emotion = emotion_list[idx[1]];
         var img;
         if (emotion_map[emotion].startsWith("http")) {
-            img = '<img src="' + emotion_map[emotion] + '" alt="' + emotion + '">';
+            img = '<img class="wechat-emotion" src="' + emotion_map[emotion] + '" alt="' + emotion + '">';
         } else if (emotion_map[emotion].endsWith("px")) {
             img = labelEmotion.replace('{{title}}', emotion).replace('{{position}}', emotion_map[emotion]);
         } else {
