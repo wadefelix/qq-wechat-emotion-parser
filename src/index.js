@@ -25,8 +25,15 @@ function qqWechatEmotionParser(str) {
     height: 28px; background-position:{{position}};"></a>`
     indices.reverse().map(function(idx) {
         var pos = idx[0],
-            emotion = emotion_list[idx[1]],
-            img = /^:.*:$|^\[.*\]$/.test(emotion) ? labelEmotion.replace('{{title}}', emotion).replace('{{position}}', emotion_map[emotion]) : '<img src="' + emotion_map[emotion] + '" alt="' + emotion + '">';
+            emotion = emotion_list[idx[1]];
+        var img;
+        if (emotion_map[emotion].startsWith("http")) {
+            img = '<img src="' + emotion_map[emotion] + '" alt="' + emotion + '">';
+        } else if (emotion_map[emotion].endsWith("px")) {
+            img = labelEmotion.replace('{{title}}', emotion).replace('{{position}}', emotion_map[emotion]);
+        } else {
+            img = emotion_map[emotion];
+        }
         str = splice(str, pos, emotion.length, img);
     });
     return str;
